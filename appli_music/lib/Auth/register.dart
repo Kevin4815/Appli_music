@@ -150,6 +150,10 @@ class _RegisterPage extends State<RegisterPage> {
   }
 
 
+  void isCreatedNavigation(){
+    Navigator.pushNamed(context, '/style');
+  }
+
   void singUp() async {
     String email = _emailController.text;
     String password = _passwordController.text;
@@ -160,6 +164,7 @@ class _RegisterPage extends State<RegisterPage> {
         //   email: email,
         //   password: password,
         // );
+        isCreatedNavigation();
       }
       else{
         _showToast(context);

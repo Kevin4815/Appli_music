@@ -1,4 +1,4 @@
-import 'package:appli_music/Auth/register.dart';
+//import 'package:appli_music/Auth/register.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,13 +19,6 @@ class _LoginPage extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
-
-  int _selectedIndex = 0;
-
-  final List<Widget> _screens = [
-    const LoginPage(title: 'Login'),
-    const RegisterPage(title: 'Register')
-  ];
 
   @override
   void dispose() {
@@ -140,53 +133,27 @@ class _LoginPage extends State<LoginPage> {
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color.fromARGB(255, 211, 211, 211),
-        // Plus de 3 éléments
-        type: BottomNavigationBarType.fixed,
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
-            label: 'Favorite',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.search),
-            label: 'Search',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          
-        ],
-        currentIndex: _selectedIndex,
-        onTap: _onItemTapped,       
-      ),
     );
   }
 
-  void _onItemTapped(int index) {
-  setState(() {
-    _selectedIndex = index;
-  });
-}
 
+  void isConnectedNavigation(){
+    Navigator.pushNamed(context, '/appinterface');
+  }
 
   void singIn() async {
     String email = _emailController.text;
     String password = _passwordController.text;
     try {
-
         await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
       
+      isConnectedNavigation();
+
        print('Connexion réussie ******************************************** !');
+
     
     } on FirebaseAuthException catch (e) {
 

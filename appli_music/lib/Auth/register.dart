@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+//import 'package:fluttertoast/fluttertoast.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key, required this.title});
@@ -152,11 +153,17 @@ class _RegisterPage extends State<RegisterPage> {
   void singUp() async {
     String email = _emailController.text;
     String password = _passwordController.text;
+    String checkPassword = _confirmPasswordController.text;
     try {
-    await FirebaseAuth.instance.createUserWithEmailAndPassword(
-      email: email,
-      password: password,
-    );
+      if(password == checkPassword){
+        // await FirebaseAuth.instance.createUserWithEmailAndPassword(
+        //   email: email,
+        //   password: password,
+        // );
+      }
+      else{
+        _showToast(context);
+      }
 
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -167,5 +174,16 @@ class _RegisterPage extends State<RegisterPage> {
     } catch (e) {
       print(e);
     }
+  }
+
+
+  void _showToast(BuildContext context) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: const Text('Les mots de passe ne correspondent pas'),
+        action: SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
   }
 }

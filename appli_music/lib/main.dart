@@ -1,6 +1,6 @@
 import 'package:appli_music/Auth/music_style.dart';
 import 'package:appli_music/Auth/register.dart';
-import 'package:appli_music/home_page/home_page.dart';
+import 'package:appli_music/navbar_screens/home_page.dart';
 import 'package:appli_music/navigation_bar/navigationbar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      initialRoute: '/homepage', // mettre login
+      initialRoute: '/appinterface', // mettre login
       routes: {
         '/login': (context) => const LoginPage(title: "Se connecter"),
         '/register': (context) => const RegisterPage(title: "S'inscrire"),

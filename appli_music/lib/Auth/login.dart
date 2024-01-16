@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 //import 'package:fluttertoast/fluttertoast.dart';
 
-
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.title});
 
@@ -15,7 +14,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPage extends State<LoginPage> {
-
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
@@ -31,7 +29,6 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-
     Widget title = Container(
       alignment: Alignment.topCenter,
       constraints: const BoxConstraints(maxHeight: 170.0),
@@ -47,77 +44,73 @@ class _LoginPage extends State<LoginPage> {
       ),
     );
 
-    Widget form = Column(
-      children: [
-        Container(
-            padding: const EdgeInsets.all(16.0),
-            child : TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                hintText: 'Entrer votre email',
-              ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return "Merci d'entrer une adresse email";
-                }
-                return null;
-              },
-            )
-          ),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            child : TextFormField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                hintText: 'Entrer votre mot de passe',
-              ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return "Merci d'entrer un mot de passe";
-                }
-                return null;
-              },
-            )
-          ),
-           Container(
-            padding: const EdgeInsets.all(16.0),
-            child:  Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                onPressed: singIn,
-                child: const Text('Valider'),
-              ),
+    Widget form = Column(children: [
+      Container(
+          padding: const EdgeInsets.all(16.0),
+          child: TextFormField(
+            controller: _emailController,
+            decoration: const InputDecoration(
+              hintText: 'Entrer votre email',
             ),
-           ),
-            Container(
-            padding: const EdgeInsets.all(16.0),
-            child:  Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: RichText(
-                  text: TextSpan(children: [
-                    const TextSpan(
-                      text:  "Vous n'avez pas encore de compte ? ",
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    TextSpan(
-                        text: "S'inscrire",
-                        style: const TextStyle(
-                          color: Colors.blue,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.pushNamed(context, '/register');
-                          }),
-                  ]),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Merci d'entrer une adresse email";
+              }
+              return null;
+            },
+          )),
+      Container(
+          padding: const EdgeInsets.all(16.0),
+          child: TextFormField(
+            controller: _passwordController,
+            decoration: const InputDecoration(
+              hintText: 'Entrer votre mot de passe',
+            ),
+            validator: (String? value) {
+              if (value == null || value.isEmpty) {
+                return "Merci d'entrer un mot de passe";
+              }
+              return null;
+            },
+          )),
+      Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: ElevatedButton(
+            onPressed: singIn,
+            child: const Text('Valider'),
+          ),
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: RichText(
+            text: TextSpan(children: [
+              const TextSpan(
+                text: "Vous n'avez pas encore de compte ? ",
+                style: TextStyle(
+                  color: Colors.black,
                 ),
               ),
-            ),
-      ]
-    );
+              TextSpan(
+                  text: "S'inscrire",
+                  style: const TextStyle(
+                    color: Colors.blue,
+                  ),
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.pushNamed(context, '/register');
+                    }),
+            ]),
+          ),
+        ),
+      ),
+    ]);
 
-   return Scaffold(
+    return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -136,34 +129,29 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
-
-  void isConnectedNavigation(){
-    Navigator.pushNamed(context, '/appinterface');
+  void isConnectedNavigation() {
+    Navigator.pushNamed(context, '/homepage');
   }
 
   void singIn() async {
     String email = _emailController.text;
     String password = _passwordController.text;
     try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: email,
-          password: password,
-        );
-      
+      await FirebaseAuth.instance.signInWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
       isConnectedNavigation();
 
-       print('Connexion réussie ******************************************** !');
-
-    
+      print('Connexion réussie ******************************************** !');
     } on FirebaseAuthException catch (e) {
-
-      if(e.code == 'invalid-email'){
+      if (e.code == 'invalid-email') {
         print("L'email n'est pas au bon format");
-      }
-      else if(e.code == 'invalid-credential'){
-        print('Email ou mot de passe incorrect. ********************************');
-      }
-      else{
+      } else if (e.code == 'invalid-credential') {
+        print(
+            'Email ou mot de passe incorrect. ********************************');
+      } else {
         print("Veuillez entrer votre email et votre mot de passe");
       }
     } catch (e) {
@@ -171,13 +159,13 @@ class _LoginPage extends State<LoginPage> {
     }
   }
 
-
-    void _showToast(BuildContext context) {
+  void _showToast(BuildContext context) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
         content: const Text('Les mots de passe ne correspondent pas'),
-        action: SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
+        action:
+            SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );
   }

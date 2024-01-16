@@ -1,13 +1,13 @@
 import 'dart:convert';
 
 import 'package:appli_music/albums/album.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
   final String title;
-  
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -27,10 +27,18 @@ Future<List<Album>> getAllAlbum(final String musicType) async {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   // Variables pour suivre la sélection actuelle
   String selectedAlbum = 'Album 1';
   String selectedSong = 'Chanson 1';
+  final AudioPlayer audioPlayer = AudioPlayer();
+  final ScrollController _homeController = ScrollController();
+  String url = "";
+
+  bool isPlaying = false;
+  Duration duration = Duration.zero;
+  Duration position = Duration.zero;
+
+  int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -48,21 +56,26 @@ class _MyHomePageState extends State<MyHomePage> {
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: snapshot.data!
-                        .map((album) => Container(
-                              padding: const EdgeInsets.all(10),
-                              child: Row(
-                                children: [
-                                  Expanded(
-                                      child: Image.network(album.albumImage!)),
-                                  const Padding(padding: EdgeInsets.all(10)),
-                                  Expanded(
-                                      child: Column(children: [
-                                    Text(album.albumName!),
-                                    Text(album.artistName!)
-                                  ]))
-                                ],
-                              ),
-                            ))
+                        .map((album) => GestureDetector(
+                            onTap: () {
+                              url = album.audio!;
+                              playerPlay(album.audio!);
+                            },
+                            child: Container(
+                                padding: const EdgeInsets.all(10),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                        child:
+                                            Image.network(album.albumImage!)),
+                                    const Padding(padding: EdgeInsets.all(10)),
+                                    Expanded(
+                                        child: Column(children: [
+                                      Text(album.albumName!),
+                                      Text(album.artistName!)
+                                    ]))
+                                  ],
+                                ))))
                         .toList(),
                   );
                 } else if (snapshot.hasError) {
@@ -75,5 +88,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+  }
+
+  void playerPause() {
+    audioPlayer.stop();
+  }
+
+  void playerPlay(String url) {
+    UrlSource source = UrlSource(url);
+    audioPlayer.play(source);
   }
 }

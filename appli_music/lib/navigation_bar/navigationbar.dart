@@ -1,25 +1,24 @@
-
 import 'package:appli_music/navbar_screens/favorite_page.dart';
-import 'package:appli_music/navbar_screens/home_page.dart';
 import 'package:appli_music/navbar_screens/profile_page.dart';
 import 'package:appli_music/navbar_screens/search_page.dart';
 
 import 'package:flutter/material.dart';
 
+import '../navbar_screens/home_page.dart';
+
 class NavTab extends StatefulWidget {
   const NavTab({super.key, required this.title});
   final String title;
-  
+
   @override
   State<NavTab> createState() => _NavTab();
 }
 
 class _NavTab extends State<NavTab> {
-
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const MyHomePage(title: 'Register'),
+    const MyHomePage(title: 'Home page'),
     const FavoritePage(title: 'Favorite'),
     const SearchPage(title: 'Search'),
     const ProfilePage(title: 'Profile ')
@@ -53,16 +52,15 @@ class _NavTab extends State<NavTab> {
             icon: Icon(Icons.person),
             label: 'Profile',
           ),
-          
         ],
         currentIndex: _selectedIndex,
-        onTap: _onItemTapped,       
+        onTap: _onItemTapped,
       ),
       body: _screens[_selectedIndex],
     );
   }
 
-    void _onItemTapped(int index) {
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });

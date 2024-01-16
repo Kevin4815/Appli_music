@@ -1,3 +1,4 @@
+import 'package:appli_music/Auth/music_style.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -150,8 +151,15 @@ class _RegisterPage extends State<RegisterPage> {
   }
 
 
-  void isCreatedNavigation(){
-    Navigator.pushNamed(context, '/style');
+  void isCreatedNavigation(userId){
+
+     Navigator.push( 
+        context, 
+        MaterialPageRoute( 
+          builder: (context) => 
+              MusicStyle(title: 'Styles', id: userId), 
+        ), 
+     );
   }
 
   void singUp() async {
@@ -160,11 +168,18 @@ class _RegisterPage extends State<RegisterPage> {
     String checkPassword = _confirmPasswordController.text;
     try {
       if(password == checkPassword){
-        // await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        //   email: email,
-        //   password: password,
-        // );
-        isCreatedNavigation();
+
+        UserCredential userCredential = await FirebaseAuth.instance.createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+
+      // Récupérer l'ID de l'utilisateur nouvellement créé
+      String userId = userCredential.user?.uid ?? "";
+
+      // Sauvegarder les styles dans Firestore
+      //await saveUserStyles(userId, selectedStyles);
+        isCreatedNavigation(userId);
       }
       else{
         _showToast(context);

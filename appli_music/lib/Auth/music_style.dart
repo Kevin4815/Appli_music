@@ -1,11 +1,14 @@
 
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 
 
 class MusicStyle extends StatefulWidget {
-  const MusicStyle({super.key, required this.title});
+  const MusicStyle({Key? key, required this.title, required this.id})  : super(key: key);
 
   final String title;
+  final String id;
 
   @override
   State<MusicStyle> createState() => _MusicStyle();
@@ -28,7 +31,7 @@ class _MusicStyle extends State<MusicStyle> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text(
-            'Votre style',
+            'Quel est ton style',
             style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
           ),
         ],
@@ -43,7 +46,9 @@ class _MusicStyle extends State<MusicStyle> {
         child:  Padding(
           padding: const EdgeInsets.symmetric(vertical: 16.0),
           child: ElevatedButton(
-            onPressed: validateStyles,
+            onPressed: () {
+              validateStyles(widget.id);
+            },
             child: const Text('Valider'),
           ),
         ),
@@ -114,7 +119,18 @@ class _MusicStyle extends State<MusicStyle> {
     });
   }
 
-  void validateStyles(){
+  Future<void> addFavorite(String userId) async {
+    
+    CollectionReference user = FirebaseFirestore.instance.collection('users');
+
+    await user.doc(userId).set({
+      'musicStyles': selectedStyles,
+    });
+  }
+
+
+  void validateStyles(userId) async {
+    await addFavorite(userId);
     Navigator.pushNamed(context, '/login');
   }
 }

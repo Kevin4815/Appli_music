@@ -1,4 +1,5 @@
 //import 'package:appli_music/Auth/register.dart';
+import 'package:appli_music/navbar_screens/home_page.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -136,21 +137,29 @@ class _LoginPage extends State<LoginPage> {
     );
   }
 
+  void isConnectedNavigation(userId){
 
-  void isConnectedNavigation(){
-    Navigator.pushNamed(context, '/appinterface');
+     Navigator.push( 
+        context, 
+        MaterialPageRoute( 
+          builder: (context) => 
+              MyHomePage(title: 'Home', id: userId), 
+        ), 
+     );
   }
 
   void singIn() async {
     String email = _emailController.text;
     String password = _passwordController.text;
     try {
-        await FirebaseAuth.instance.signInWithEmailAndPassword(
+        UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
           password: password,
         );
       
-      isConnectedNavigation();
+      String userId = userCredential.user?.uid ?? "";
+
+      isConnectedNavigation(userId);
 
        print('Connexion réussie ******************************************** !');
 

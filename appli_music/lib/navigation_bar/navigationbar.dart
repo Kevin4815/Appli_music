@@ -19,7 +19,7 @@ class _NavTab extends State<NavTab> {
   int _selectedIndex = 0;
 
   final List<Widget> _screens = [
-    const MyHomePage(title: 'Register'),
+    const MyHomePage(title: 'Register', id:""),
     const FavoritePage(title: 'Favorite'),
     const SearchPage(title: 'Search'),
     const ProfilePage(title: 'Profile ')

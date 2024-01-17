@@ -129,6 +129,35 @@ class _MusicStyle extends State<MusicStyle> {
     });
   }
 
+
+
+
+
+
+
+
+//   Future<void> addFavorite(String userId, String newStyle) async {
+//   CollectionReference user = FirebaseFirestore.instance.collection('users');
+
+//   // Récupérer la liste actuelle depuis la base de données
+//   DocumentSnapshot userSnapshot = await user.doc(userId).get();
+//   List<String> currentStyles = List<String>.from(userSnapshot['musicStyles'] ?? []);
+
+//   // Ajouter le nouvel élément à la liste  
+//   currentStyles.add(newStyle);
+
+//   // Mettre à jour le document dans la base de données avec la nouvelle liste
+//   await user.doc(userId).set({
+//     'musicStyles': currentStyles,
+//   });
+// }
+
+
+
+
+
+
+
   void navigation(userId){
     Navigator.push( 
         context, 

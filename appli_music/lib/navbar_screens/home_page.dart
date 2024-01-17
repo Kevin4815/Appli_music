@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:appli_music/albums/album.dart';
+import 'package:appli_music/audioPlayer/audioplayer.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -35,9 +36,27 @@ class _MyHomePageState extends State<MyHomePage> {
   // Variables pour suivre la sélection actuelle
   String selectedAlbum = 'Album 1';
   String selectedSong = 'Chanson 1';
-  final AudioPlayer audioPlayer = AudioPlayer();
+  final MyAudioPlayer audioPlayer = MyAudioPlayer.instance;
   late Future<List<String>> musicStyles;
   String url = "";
+  bool isPaused = false;
+
+  void playerPause() {
+    setState(() {
+      if (isPaused) {
+        audioPlayer.resume();
+      } else {
+        audioPlayer.stop();
+      }
+      isPaused = !isPaused;
+    });
+  }
+
+  void playerPlay(String url) {
+    UrlSource source = UrlSource(url);
+    audioPlayer.play(source);
+    isPaused = false;
+  }
 
   // Get playlist of favorites musics from database
   @override
@@ -105,6 +124,12 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: playerPause,
+        tooltip: 'Pause',
+        child:
+            isPaused ? const Icon(Icons.play_arrow) : const Icon(Icons.pause),
+      ),
     );
   }
 
@@ -134,14 +159,5 @@ class _MyHomePageState extends State<MyHomePage> {
       print("Error getting document: $e");
       return [];
     }
-  }
-
-  void playerPause() {
-    audioPlayer.stop();
-  }
-
-  void playerPlay(String url) {
-    UrlSource source = UrlSource(url);
-    audioPlayer.play(source);
   }
 }

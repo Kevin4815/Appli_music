@@ -1,7 +1,7 @@
 
+import 'package:appli_music/navbar_screens/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 
 class MusicStyle extends StatefulWidget {
@@ -128,9 +128,18 @@ class _MusicStyle extends State<MusicStyle> {
     });
   }
 
-
-  void validateStyles(userId) async {
+  void navigation(userId){
+    Navigator.push( 
+        context, 
+        MaterialPageRoute( 
+          builder: (context) => 
+              MyHomePage(title: 'Styles', id: userId), 
+        ), 
+     );
+  } 
+  
+  void validateStyles(userId) async{
     await addFavorite(userId);
-    Navigator.pushNamed(context, '/login');
+    navigation(userId);
   }
 }

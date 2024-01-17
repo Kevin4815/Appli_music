@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key, required this.title}) : super(key: key);
@@ -14,30 +15,59 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePage extends State<ProfilePage> {
-  late ImageProvider<Object> _profileImage = const AssetImage('assets/profil_vide.jpg');
-  
+ late ImageProvider<Object> _profileImage =
+      const AssetImage('assets/profil_vide.jpg');
+
   final ImagePicker picker = ImagePicker();
 
+  @override
+  void initState() {
+    super.initState();
+    _loadProfileImage();
+  }
+
+  _loadProfileImage() async {
+    final directory = await getApplicationDocumentsDirectory();
+    final imagePath = File('${directory.path}/profile_image.jpg');
+
+    if (imagePath.existsSync()) {
+      setState(() {
+        _profileImage = FileImage(imagePath);
+      });
+    }
+  }
+
   _chooseImage() async {
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.gallery); 
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
+      final directory = await getApplicationDocumentsDirectory();
+      final File destinationFile = File('${directory.path}/profile_image.jpg');
+
+      await File(pickedFile.path).copy(destinationFile.path);
+
       setState(() {
-        _profileImage = FileImage(File(pickedFile.path));
+        _profileImage = FileImage(destinationFile);
       });
     }
   }
 
   _pickImage() async {
-    final XFile? pickedFile = await picker.pickImage(source: ImageSource.camera); 
+    final XFile? pickedFile =
+        await picker.pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
+      final directory = await getApplicationDocumentsDirectory();
+      final File destinationFile = File('${directory.path}/profile_image.jpg');
+
+      await File(pickedFile.path).copy(destinationFile.path);
+
       setState(() {
-        _profileImage = FileImage(File(pickedFile.path));
+        _profileImage = FileImage(destinationFile);
       });
     }
   }
-
   @override
   Widget build(BuildContext context) {
     Widget title = Container(

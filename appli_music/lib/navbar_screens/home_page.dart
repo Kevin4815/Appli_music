@@ -126,27 +126,11 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          FloatingActionButton(
-            onPressed: playerPause,
-            tooltip: 'Previous',
-            child: const Icon(Icons.skip_previous),
-          ),
-          FloatingActionButton(
-            onPressed: playerPause,
-            tooltip: 'Pause',
-            child: isPaused
-                ? const Icon(Icons.play_arrow)
-                : const Icon(Icons.pause),
-          ),
-          FloatingActionButton(
-            onPressed: playerPause,
-            tooltip: 'Next',
-            child: const Icon(Icons.skip_next),
-          )
-        ],
+      floatingActionButton: FloatingActionButton(
+        onPressed: playerPause,
+        tooltip: 'Pause',
+        child:
+            isPaused ? const Icon(Icons.play_arrow) : const Icon(Icons.pause),
       ),
     );
   }

@@ -20,13 +20,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      initialRoute: '/appinterface', // mettre login
+      initialRoute: '/login', // mettre login
       routes: {
         '/login': (context) => const LoginPage(title: "Se connecter"),
         '/register': (context) => const RegisterPage(title: "S'inscrire"),
         //'/style': (context) => const MusicStyle(title: "Style de musique"),
         //'/homepage': (context) => const MyHomePage(title: "Home page"),
-        '/appinterface': (context) => const NavTab(title: "Navigation"),
+        '/appinterface': (context) => const NavTab(title: "Navigation", id:""),
       },
       debugShowCheckedModeBanner: false,
       theme: ThemeData(

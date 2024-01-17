@@ -46,6 +46,11 @@ class _ProfilePage extends State<ProfilePage> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          const Column(
+            children: [
+              //ElevatedButton(onPressed: onPressed, child: "Se déconnecter")
+            ],
+          ),
           CircleAvatar(
             radius: 100.0,
             backgroundImage: _profileImage,

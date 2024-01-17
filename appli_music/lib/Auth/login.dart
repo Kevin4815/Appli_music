@@ -1,5 +1,6 @@
 //import 'package:appli_music/Auth/register.dart';
-import 'package:appli_music/navbar_screens/home_page.dart';
+//import 'package:appli_music/navbar_screens/home_page.dart';
+import 'package:appli_music/navigation_bar/navigationbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -145,7 +146,7 @@ class _LoginPage extends State<LoginPage> {
         context, 
         MaterialPageRoute( 
           builder: (context) => 
-              MyHomePage(title: 'Home', id: userId), 
+              NavTab(title: 'Home', id: userId), 
         ), 
      );
   }

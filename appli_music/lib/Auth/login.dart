@@ -1,8 +1,10 @@
 //import 'package:appli_music/Auth/register.dart';
-import 'package:appli_music/navbar_screens/home_page.dart';
+//import 'package:appli_music/navbar_screens/home_page.dart';
+import 'package:appli_music/navigation_bar/navigationbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
 //import 'package:fluttertoast/fluttertoast.dart';
 
 
@@ -32,6 +34,7 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+
 
     Widget title = Container(
       alignment: Alignment.topCenter,
@@ -143,7 +146,7 @@ class _LoginPage extends State<LoginPage> {
         context, 
         MaterialPageRoute( 
           builder: (context) => 
-              MyHomePage(title: 'Home', id: userId), 
+              NavTab(title: 'Home', id: userId), 
         ), 
      );
   }
@@ -165,27 +168,35 @@ class _LoginPage extends State<LoginPage> {
 
     
     } on FirebaseAuthException catch (e) {
-
-      if(e.code == 'invalid-email'){
-        print("L'email n'est pas au bon format");
-      }
-      else if(e.code == 'invalid-credential'){
-        print('Email ou mot de passe incorrect. ********************************');
-      }
-      else{
-        print("Veuillez entrer votre email et votre mot de passe");
-      }
+      checkLoginError(e);
     } catch (e) {
       print(e);
     }
   }
 
 
-    void _showToast(BuildContext context) {
+    void checkLoginError(e){
+      if(_emailController.text != "" && _passwordController.text != ""){
+        if(e.code == 'invalid-email'){
+          print("L'email n'est pas au bon format");
+          _showToast(context, "L'email n'est pas au bon format");
+        }
+        else if(e.code == 'invalid-credential'){
+          print('Email ou mot de passe incorrect. ********************************');
+          _showToast(context, 'Email ou mot de passe incorrect.');
+        }
+      }
+      else{
+        print("Veuillez entrer votre email et votre mot de passe");
+         _showToast(context, 'Veuillez entrer votre email et votre mot de passe');
+      }
+    }
+
+    void _showToast(BuildContext context, String message) {
     final scaffold = ScaffoldMessenger.of(context);
     scaffold.showSnackBar(
       SnackBar(
-        content: const Text('Les mots de passe ne correspondent pas'),
+        content: Text(message),
         action: SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
       ),
     );

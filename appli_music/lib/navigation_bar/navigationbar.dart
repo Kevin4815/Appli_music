@@ -16,11 +16,18 @@ class NavTab extends StatefulWidget {
 class _NavTab extends State<NavTab> {
   int _selectedIndex = 0;
 
-  final List<Widget> _screens = [
-    const MyHomePage(title: 'Register', id: ""),
-    const HistoryPage(title: 'History'),
-    const ProfilePage(title: 'Profile ')
-  ];
+  List<Widget> _screens = [];
+
+  @override
+  void initState() {
+    super.initState();
+
+    _screens = [
+       MyHomePage(title: 'Register', id: widget.id),
+      const HistoryPage(title: 'History'),
+      ProfilePage(title: 'Profile ', id: widget.id),
+    ];
+  }
 
   // Variables pour suivre la sélection actuelle
   String selectedAlbum = 'Album 1';

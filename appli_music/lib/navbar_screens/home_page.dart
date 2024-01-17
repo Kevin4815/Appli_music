@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:appli_music/albums/album.dart';
 import 'package:appli_music/audioPlayer/audioplayer.dart';
@@ -8,6 +9,9 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title, required this.id});
@@ -119,12 +123,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                             Text(album.albumName!),
                                             Text(album.artistName!)
                                           ])),
-                                          Expanded(
-                                            child: IconButton(
+                                           Expanded(
+                                                 child: IconButton(
                                                 icon:
                                                     const Icon(Icons.download),
                                                 tooltip: 'download',
-                                                onPressed: () {}),
+                                                onPressed: () {
+                                                  downloadMusic(album.audiodownload!, album.name!);
+                                                }),
                                           )
                                         ],
                                       ))))
@@ -158,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // widget.id
     final docRef = FirebaseFirestore.instance
         .collection("users")
-        .doc("IX82UsZ2DHZp9eIVllP5NUqzvu42");
+        .doc(widget.id); // "IX82UsZ2DHZp9eIVllP5NUqzvu42"
     try {
       final DocumentSnapshot doc = await docRef.get();
 
@@ -180,5 +186,46 @@ class _MyHomePageState extends State<MyHomePage> {
       print("Error getting document: $e");
       return [];
     }
+  }
+}
+
+
+Future<void> downloadMusic(String fileUrl, String fileName) async {
+  try {
+    var status = await Permission.storage.request();
+    
+    if (status.isDenied) {
+      if (await Permission.manageExternalStorage.isPermanentlyDenied) {
+        openAppSettings();
+      } else {
+        await Permission.manageExternalStorage.request();
+      }
+    }
+
+    if (!status.isGranted) {
+      print('Permission de stockage refusée.');
+      return;
+    }
+
+    Directory? downloadsDirectory = await getDownloadsDirectory();
+
+    if (downloadsDirectory == null) {
+      print('Impossible d\'obtenir le répertoire "Téléchargements".');
+      return;
+    }
+
+    String savePath = '${downloadsDirectory.path}/$fileName';
+
+    var response = await http.get(Uri.parse(fileUrl));
+
+    if (response.statusCode == 200) {
+      File file = File(savePath);
+      await file.writeAsBytes(response.bodyBytes);
+      print('Téléchargement réussi. Chemin du fichier : $savePath');
+    } else {
+      print('Échec du téléchargement. Code de statut : ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Erreur lors du téléchargement : $e');
   }
 }

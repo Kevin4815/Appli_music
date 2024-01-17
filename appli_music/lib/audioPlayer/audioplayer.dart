@@ -16,12 +16,16 @@ class MyAudioPlayer extends AudioPlayer {
 
   // Votre logique métier ici
 
-  void playAudio(String url) {
-    play(url as Source);
+  void playAudio(Source url) {
+    play(url);
   }
 
   void pauseAudio() {
     pause();
+  }
+
+  void resumeAudio() {
+    resume();
   }
 
   // Ajoutez d'autres méthodes selon vos besoins

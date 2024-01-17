@@ -44,9 +44,9 @@ class _MyHomePageState extends State<MyHomePage> {
   void playerPause() {
     setState(() {
       if (isPaused) {
-        audioPlayer.resume();
+        audioPlayer.resumeAudio();
       } else {
-        audioPlayer.stop();
+        audioPlayer.pauseAudio();
       }
       isPaused = !isPaused;
     });
@@ -54,7 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void playerPlay(String url) {
     UrlSource source = UrlSource(url);
-    audioPlayer.play(source);
+    audioPlayer.playAudio(source);
     isPaused = false;
   }
 

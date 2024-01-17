@@ -43,6 +43,7 @@ dependencies:
   form_validator: ">=0.1.1 <2.0.0"
   flutter_pw_validator: ^1.6.0
   image_picker: ^1.0.7
+  audioplayers: ^5.2.1
 
 dev_dependencies:
   flutter_test:

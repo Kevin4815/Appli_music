@@ -3,6 +3,8 @@ import 'dart:io';
 
 import 'package:appli_music/albums/album.dart';
 import 'package:appli_music/audioPlayer/audioplayer.dart';
+import 'package:appli_music/historical/history.dart';
+import 'package:appli_music/history/history.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +46,8 @@ class _MyHomePageState extends State<MyHomePage> {
   late Future<List<String>> musicStyles;
   String url = "";
   bool isPaused = false;
+  late Future<List<Album>> favoritesMusics;
+  final History history = History.instance;
 
   void playerPause() {
     setState(() {
@@ -57,9 +61,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void playerPlay(String url) {
-    UrlSource source = UrlSource(url);
-    audioPlayer.playAudio(source);
-    isPaused = false;
+    setState(() {
+      UrlSource source = UrlSource(url);
+      audioPlayer.playAudio(source);
+      isPaused = false;
+    });
   }
 
   // Get playlist of favorites musics from database
@@ -94,6 +100,14 @@ class _MyHomePageState extends State<MyHomePage> {
                                   onTap: () {
                                     url = album.audio!;
                                     playerPlay(album.audio!);
+                                    if (history.albums.isEmpty) {
+                                      history.addToData(album);
+                                    } else {
+                                      if (history.albums.last.albumId !=
+                                          album.albumId) {
+                                        history.addToData(album);
+                                      }
+                                    }
                                   },
                                   child: Container(
                                       padding: const EdgeInsets.all(10),
@@ -215,6 +229,3 @@ Future<void> downloadMusic(String fileUrl, String fileName) async {
     print('Erreur lors du téléchargement : $e');
   }
 }
-
-
-// I/flutter (30833): Téléchargement réussi. Chemin du fichier : /storage/emulated/0/Android/data/com.example.appli_music/files/downloads/La note en cage

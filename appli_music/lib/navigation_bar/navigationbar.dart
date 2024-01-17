@@ -7,8 +7,9 @@ import 'package:appli_music/navbar_screens/search_page.dart';
 import 'package:flutter/material.dart';
 
 class NavTab extends StatefulWidget {
-  const NavTab({super.key, required this.title});
+  const NavTab({super.key, required this.title, required this.id});
   final String title;
+  final String id;
   
   @override
   State<NavTab> createState() => _NavTab();

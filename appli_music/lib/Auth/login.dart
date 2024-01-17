@@ -151,7 +151,7 @@ class _LoginPage extends State<LoginPage> {
      );
   }
 
-  void singIn() async {
+  Future<void> singIn() async {
     String email = _emailController.text;
     String password = _passwordController.text;
     try {

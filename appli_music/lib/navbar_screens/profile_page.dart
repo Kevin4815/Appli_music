@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -41,16 +42,11 @@ class _ProfilePage extends State<ProfilePage> {
   Widget build(BuildContext context) {
     Widget title = Container(
       alignment: Alignment.topCenter,
-      constraints: const BoxConstraints(maxHeight: 170.0),
-      padding: const EdgeInsets.all(16.0),
+      constraints: const BoxConstraints(maxHeight: 50.0),
+      padding: const EdgeInsets.all(5.0),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Column(
-            children: [
-              //ElevatedButton(onPressed: onPressed, child: "Se déconnecter")
-            ],
-          ),
           CircleAvatar(
             radius: 100.0,
             backgroundImage: _profileImage,
@@ -63,6 +59,16 @@ class _ProfilePage extends State<ProfilePage> {
           ElevatedButton(
             onPressed: _pickImage,
             child: const Text('Prendre une photo'),
+          ),
+          Container(
+            padding: const EdgeInsets.all(16.0),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 50.0),
+              child: ElevatedButton(
+                onPressed: signOut,
+                child: const Text('Se déconnecter'),
+              ),
+            ),
           ),
         ],
       ),
@@ -85,4 +91,10 @@ class _ProfilePage extends State<ProfilePage> {
       ),
     );
   }
+  
+  Future<void> signOut() async {
+    await FirebaseAuth.instance.signOut();
+    Navigator.pushNamed(context, '/login');
+  }
 }
+

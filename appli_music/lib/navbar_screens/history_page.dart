@@ -1,5 +1,5 @@
 import 'package:appli_music/audioPlayer/audioplayer.dart';
-import 'package:appli_music/historical/history.dart';
+import 'package:appli_music/history/history.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 
@@ -59,6 +59,8 @@ class _HistoryPage extends State<HistoryPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
       ),
       body: ListView.builder(
         itemCount: history.getData().length,

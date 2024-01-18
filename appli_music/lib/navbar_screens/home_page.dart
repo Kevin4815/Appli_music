@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:appli_music/albums/album.dart';
 import 'package:appli_music/audioPlayer/audioplayer.dart';
-import 'package:appli_music/historical/history.dart';
 import 'package:appli_music/history/history.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -78,6 +77,13 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        title: Text(widget.title),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+      ),
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
@@ -164,7 +170,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // widget.id
     final docRef = FirebaseFirestore.instance
         .collection("users")
-        .doc(widget.id); // "IX82UsZ2DHZp9eIVllP5NUqzvu42"
+        .doc(widget.id);
+        
     try {
       final DocumentSnapshot doc = await docRef.get();
 
@@ -175,15 +182,12 @@ class _MyHomePageState extends State<MyHomePage> {
           List<String> musicStyles = List<String>.from(data["musicStyles"]);
           return musicStyles;
         } else {
-          print("musicStyles not found in document data.");
           return [];
         }
       } else {
-        print("Document does not exist.");
         return [];
       }
     } catch (e) {
-      print("Error getting document: $e");
       return [];
     }
   }

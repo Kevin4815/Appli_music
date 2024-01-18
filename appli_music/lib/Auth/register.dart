@@ -3,8 +3,6 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-//import 'package:fluttertoast/fluttertoast.dart';
-
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key, required this.title});
 
@@ -25,7 +23,6 @@ class _RegisterPage extends State<RegisterPage> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     _emailController.dispose();
     _confirmPasswordController.dispose();
     _passwordController.dispose();
@@ -176,6 +173,8 @@ class _RegisterPage extends State<RegisterPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
@@ -214,11 +213,9 @@ class _RegisterPage extends State<RegisterPage> {
           password: password,
         );
 
-      // Récupérer l'ID de l'utilisateur nouvellement créé
-      String userId = userCredential.user?.uid ?? "";
+        // Récupérer l'ID de l'utilisateur nouvellement créé
+        String userId = userCredential.user?.uid ?? "";
 
-      // Sauvegarder les styles dans Firestore
-      //await saveUserStyles(userId, selectedStyles);
         isCreatedNavigation(userId);
       }
       else{
@@ -227,10 +224,8 @@ class _RegisterPage extends State<RegisterPage> {
 
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
-        //print('The password provided is too weak.');
         _showToast(context, 'Le mot de passe est trop court');
       } else if (e.code == 'email-already-in-use') {
-        //print('The account already exists for that email.');
         _showToast(context, 'Ce compte existe déjà');
       }
     } catch (e) {

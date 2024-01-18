@@ -23,8 +23,8 @@ class _NavTab extends State<NavTab> {
     super.initState();
 
     _screens = [
-       MyHomePage(title: 'Register', id: widget.id),
-      const HistoryPage(title: 'History'),
+       MyHomePage(title: 'Suggestions', id: widget.id),
+      const HistoryPage(title: 'Historique'),
       ProfilePage(title: 'Profile ', id: widget.id),
     ];
   }

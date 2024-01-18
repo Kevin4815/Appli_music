@@ -1,12 +1,8 @@
-//import 'package:appli_music/Auth/register.dart';
-//import 'package:appli_music/navbar_screens/home_page.dart';
+
 import 'package:appli_music/navigation_bar/navigationbar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
-//import 'package:fluttertoast/fluttertoast.dart';
-
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.title});
@@ -25,7 +21,6 @@ class _LoginPage extends State<LoginPage> {
 
   @override
   void dispose() {
-    // Clean up the controller when the widget is disposed.
     _emailController.dispose();
     _confirmPasswordController.dispose();
     _passwordController.dispose();
@@ -126,6 +121,8 @@ class _LoginPage extends State<LoginPage> {
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
       ),
       body: Center(
         child: Column(
@@ -164,7 +161,7 @@ class _LoginPage extends State<LoginPage> {
 
       isConnectedNavigation(userId);
 
-       print('Connexion réussie ******************************************** !');
+      //print('Connexion réussie ******************************************** !');
 
     
     } on FirebaseAuthException catch (e) {
@@ -178,16 +175,13 @@ class _LoginPage extends State<LoginPage> {
     void checkLoginError(e){
       if(_emailController.text != "" && _passwordController.text != ""){
         if(e.code == 'invalid-email'){
-          print("L'email n'est pas au bon format");
           _showToast(context, "L'email n'est pas au bon format");
         }
         else if(e.code == 'invalid-credential'){
-          print('Email ou mot de passe incorrect. ********************************');
           _showToast(context, 'Email ou mot de passe incorrect.');
         }
       }
       else{
-        print("Veuillez entrer votre email et votre mot de passe");
          _showToast(context, 'Veuillez entrer votre email et votre mot de passe');
       }
     }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:appli_music/audioPlayer/audioplayer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -31,19 +32,17 @@ class _ProfilePage extends State<ProfilePage> {
 
   loadImage() async {
     String? imageUrl = await getProfilePicture();
-    String? imageLocal = await getStoredImageUrl();
     
-    if (imageLocal != null && imageLocal.isNotEmpty) {
-      // Si une image locale est présente, utilisez-la
-      setState(() {
-        _profileImage = FileImage(File(imageLocal));
-      });
-    } else if (imageUrl != null && imageUrl.isNotEmpty) {
-      // Sinon, utilisez l'image de la base de données
-      setState(() {
-        _profileImage = FileImage(File(imageUrl));
-      });
-    }
+    setState(() {
+
+      if(imageUrl != ""){
+        _profileImage = FileImage(File(imageUrl!));
+      }
+      else{
+        _profileImage = const AssetImage('assets/profil_vide.jpg');
+      }
+    });
+  
   }
 
   _chooseImage() async {
@@ -52,7 +51,6 @@ class _ProfilePage extends State<ProfilePage> {
     if (pickedFile != null) {
       setState(() {
         _profileImage = FileImage(File(pickedFile.path));
-        //addProfilePicture(widget.id);
       });
     }
   }
@@ -65,27 +63,8 @@ class _ProfilePage extends State<ProfilePage> {
         _profileImage = FileImage(File(pickedFile.path));
         image = pickedFile.path;
         addProfilePicture(widget.id, image);
-        storeImageUrlLocally(pickedFile.path);
       });
     }
-  }
-
-  Future<String?> getStoredImageUrl() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? imageUrl = prefs.getString('profileImageUrl');
-
-    // Vérifier si l'image existe
-    if (imageUrl != null && imageUrl.isNotEmpty) {
-      return imageUrl;
-    } else {
-      // L'image n'existe pas
-      return null;
-    }
-  }
-
-  Future<void> storeImageUrlLocally(String imageUrl) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.setString('profileImageUrl', imageUrl);
   }
 
   @override
@@ -127,8 +106,10 @@ class _ProfilePage extends State<ProfilePage> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.secondary,
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
+        automaticallyImplyLeading: false,
+        centerTitle: true,
       ),
       body: Center(
         child: Column(
@@ -144,6 +125,8 @@ class _ProfilePage extends State<ProfilePage> {
   
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
+    MyAudioPlayer audio = MyAudioPlayer.instance;
+    audio.pauseAudio();
     Navigator.pushNamed(context, '/login');
   }
 
@@ -158,6 +141,7 @@ class _ProfilePage extends State<ProfilePage> {
 
    Future<String?> getProfilePicture() async {
     final docRef = FirebaseFirestore.instance.collection("users").doc(widget.id);
+    String message = "";
 
     try {
       final DocumentSnapshot doc = await docRef.get();
@@ -166,20 +150,22 @@ class _ProfilePage extends State<ProfilePage> {
         final data = doc.data() as Map<String, dynamic>;
 
         if (data.containsKey("profilePicture")) {
-          String musicStyles = data["profilePicture"] as String;
-          return musicStyles;
+          String profilePicture = data["profilePicture"] as String;
+          message = profilePicture;
         } else {
           print(" not found in document data.");
-          return null;
+          message = "";
         }
       } else {
         print("Document does not exist.");
-        return null;
+        message = "Document does not exist.";
       }
     } catch (e) {
       print("Error getting document: $e");
-      return null;
+      message = "Error getting document: $e";
     }
+
+    return message;
   }
 
 

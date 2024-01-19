@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:appli_music/albums/album.dart';
 import 'package:appli_music/audioPlayer/audioplayer.dart';
+import 'package:appli_music/audioPlayer/downloader.dart';
 import 'package:appli_music/history/history.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
   bool isPaused = false;
   late Future<List<Album>> favoritesMusics;
   final History history = History.instance;
+  final MyDownloader downloader = MyDownloader.instance;
 
   void playerPause() {
       if (isPaused) {
@@ -157,7 +159,7 @@ Widget build(BuildContext context) {
                                               icon: const Icon(Icons.download),
                                               tooltip: 'Télécharger',
                                               onPressed: () {
-                                                downloadMusic(album.audiodownload!, album.name!);
+                                                downloader.downloadMusic(album.audiodownload!, album.name!);
                                                 _showToast(context, 'Musique téléchargée');
                                               },
                                             ),
@@ -225,47 +227,6 @@ Widget build(BuildContext context) {
     } catch (e) {
       return [];
     }
-  }
-}
-
-
-Future<void> downloadMusic(String fileUrl, String fileName) async {
-  try {
-    var status = await Permission.storage.request();
-    
-    if (status.isDenied) {
-      if (await Permission.manageExternalStorage.isPermanentlyDenied) {
-        openAppSettings();
-      } else {
-        await Permission.manageExternalStorage.request();
-      }
-    }
-
-    if (!status.isGranted) {
-      print('Permission de stockage refusée.');
-      return;
-    }
-
-    Directory? downloadsDirectory = await getDownloadsDirectory();
-
-    if (downloadsDirectory == null) {
-      print('Impossible d\'obtenir le répertoire "Téléchargements".');
-      return;
-    }
-
-    String savePath = '${downloadsDirectory.path}/$fileName';
-
-    var response = await http.get(Uri.parse(fileUrl));
-
-    if (response.statusCode == 200) {
-      File file = File(savePath);
-      await file.writeAsBytes(response.bodyBytes);
-      print('Téléchargement réussi. Chemin du fichier : $savePath');
-    } else {
-      print('Échec du téléchargement. Code de statut : ${response.statusCode}');
-    }
-  } catch (e) {
-    print('Erreur lors du téléchargement : $e');
   }
 }
 

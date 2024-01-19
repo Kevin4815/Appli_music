@@ -1,4 +1,5 @@
 import 'package:appli_music/audioPlayer/audioplayer.dart';
+import 'package:appli_music/audioPlayer/downloader.dart';
 import 'package:appli_music/history/history.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,9 @@ class HistoryPage extends StatefulWidget {
 
 class _HistoryPage extends State<HistoryPage> {
   final History history = History.instance;
-  String url = "";
   final MyAudioPlayer audioPlayer = MyAudioPlayer.instance;
+  final MyDownloader downloader = MyDownloader.instance;
+  String url = "";
   bool isPaused = false;
 
   void playerPause() {
@@ -102,9 +104,10 @@ class _HistoryPage extends State<HistoryPage> {
                   Expanded(
                     child: IconButton(
                       icon: const Icon(Icons.download),
-                      tooltip: 'download',
+                      tooltip: 'Télécharger',
                       onPressed: () {
-                        // Action de téléchargement ici
+                         downloader.downloadMusic(album.audiodownload!, album.name!);
+                        _showToast(context, 'Musique téléchargée');
                       },
                     ),
                   )
@@ -124,7 +127,17 @@ class _HistoryPage extends State<HistoryPage> {
   }
 }
 
-  String capitalizeFirst(String text) {
+ void _showToast(BuildContext context, String message) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
+String capitalizeFirst(String text) {
   if (text.isEmpty) {
     return text;
   }

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:appli_music/Auth/login.dart';
 import 'package:appli_music/audioPlayer/audioplayer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -42,7 +43,6 @@ class _ProfilePage extends State<ProfilePage> {
         _profileImage = const AssetImage('assets/profil_vide.jpg');
       }
     });
-  
   }
 
   _chooseImage() async {
@@ -122,13 +122,24 @@ class _ProfilePage extends State<ProfilePage> {
       ),
     );
   }
+
+  void isDisconnectedNavigation(){
+   Navigator.pushReplacement( 
+      context, 
+      MaterialPageRoute( 
+        builder: (context) => 
+          const LoginPage(title: 'Login'), 
+      ), 
+   );
+  }
   
   Future<void> signOut() async {
     await FirebaseAuth.instance.signOut();
     MyAudioPlayer audio = MyAudioPlayer.instance;
     audio.pauseAudio();
-    Navigator.pushNamed(context, '/login');
+    isDisconnectedNavigation();
   }
+
 
   Future<void> addProfilePicture(String userId, String image) async {
     

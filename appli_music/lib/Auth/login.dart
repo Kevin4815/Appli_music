@@ -27,126 +27,152 @@ class _LoginPage extends State<LoginPage> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
+ @override
+Widget build(BuildContext context) {
+  Widget title = Container(
+    alignment: Alignment.topCenter,
+    constraints: const BoxConstraints(maxHeight: 170.0),
+    padding: const EdgeInsets.all(16.0),
+    child: const Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'Connectez-vous !',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24),
+        ),
+      ],
+    ),
+  );
 
+  Widget form = Column(
+    children: [
+      Container(
+        padding: const EdgeInsets.all(16.0),
+        child: TextFormField(
+          controller: _emailController,
+          decoration: InputDecoration(
+            hintText: 'Entrer votre email',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.all(12.0),
+          ),
+          validator: (String? value) {
+            if (value == null || value.isEmpty) {
+              return "Merci d'entrer une adresse email";
+            }
+            return null;
+          },
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.all(16.0),
+        child: TextFormField(
+          controller: _passwordController,
+          decoration: InputDecoration(
+            hintText: 'Entrer votre mot de passe',
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(15.0),
+            ),
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.all(12.0),
+          ),
+          obscureText: true,
+          validator: (String? value) {
+            if (value == null || value.isEmpty) {
+              return "Merci d'entrer un mot de passe";
+            }
+            return null;
+          },
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: ElevatedButton(
+            onPressed: singIn,
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(15.0),
+              ),
+            ),
+            child: const Text(
+              'Valider',
+              style: TextStyle(fontSize: 15),
+            ),
+          ),
+        ),
+      ),
+      Container(
+        padding: const EdgeInsets.all(16.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: RichText(
+            text: TextSpan(children: [
+              const TextSpan(
+                text:  "Vous n'avez pas encore de compte ? ",
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16,
+                ),
+              ),
+              TextSpan(
+                text: "S'inscrire",
+                style: const TextStyle(
+                  color: Colors.blue,
+                  fontSize: 16,
+                ),
+                recognizer: TapGestureRecognizer()
+                  ..onTap = () {
+                    Navigator.pushNamed(context, '/register');
+                  },
+              ),
+            ]),
+          ),
+        ),
+      ),
+    ],
+  );
 
-    Widget title = Container(
-      alignment: Alignment.topCenter,
-      constraints: const BoxConstraints(maxHeight: 170.0),
-      padding: const EdgeInsets.all(16.0),
-      child: const Row(
-        mainAxisAlignment: MainAxisAlignment.center,
+  return Scaffold(
+    resizeToAvoidBottomInset: false,
+    appBar: AppBar(
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      title: Text(
+        widget.title,
+        style: const TextStyle(fontSize: 20),
+      ),
+      centerTitle: true,
+      automaticallyImplyLeading: false,
+    ),
+    body: Center(
+      child: Column(
         children: [
-          Text(
-            'Connectez-vous !',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+          title,
+          Expanded(
+            child: form,
           ),
         ],
       ),
-    );
+    ),
+  );
+}
 
-    Widget form = Column(
-      children: [
-        Container(
-            padding: const EdgeInsets.all(16.0),
-            child : TextFormField(
-              controller: _emailController,
-              decoration: const InputDecoration(
-                hintText: 'Entrer votre email',
-              ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return "Merci d'entrer une adresse email";
-                }
-                return null;
-              },
-            )
-          ),
-          Container(
-            padding: const EdgeInsets.all(16.0),
-            child : TextFormField(
-              controller: _passwordController,
-              decoration: const InputDecoration(
-                hintText: 'Entrer votre mot de passe',
-              ),
-              validator: (String? value) {
-                if (value == null || value.isEmpty) {
-                  return "Merci d'entrer un mot de passe";
-                }
-                return null;
-              },
-            )
-          ),
-           Container(
-            padding: const EdgeInsets.all(16.0),
-            child:  Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: ElevatedButton(
-                onPressed: singIn,
-                child: const Text('Valider'),
-              ),
-            ),
-           ),
-            Container(
-            padding: const EdgeInsets.all(16.0),
-            child:  Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-                child: RichText(
-                  text: TextSpan(children: [
-                    const TextSpan(
-                      text:  "Vous n'avez pas encore de compte ? ",
-                      style: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    TextSpan(
-                        text: "S'inscrire",
-                        style: const TextStyle(
-                          color: Colors.blue,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Navigator.pushNamed(context, '/register');
-                          }),
-                  ]),
-                ),
-              ),
-            ),
-      ]
-    );
+void isConnectedNavigation(userId){
+   Navigator.pushReplacement( 
+      context, 
+      MaterialPageRoute( 
+        builder: (context) => 
+            NavTab(title: 'Home', id: userId), 
+      ), 
+   );
+}
 
-   return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-      ),
-      body: Center(
-        child: Column(
-          children: [
-            title,
-            Expanded(
-              child: form,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  void isConnectedNavigation(userId){
-
-     Navigator.push( 
-        context, 
-        MaterialPageRoute( 
-          builder: (context) => 
-              NavTab(title: 'Home', id: userId), 
-        ), 
-     );
-  }
 
   Future<void> singIn() async {
     String email = _emailController.text;

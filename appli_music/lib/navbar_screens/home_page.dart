@@ -13,7 +13,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title, required this.id});
+  const MyHomePage({super.key, required this.title, required this.id}); 
   final String title;
   final String id;
 
@@ -24,6 +24,7 @@ class MyHomePage extends StatefulWidget {
 Future<List<Album>> getAllAlbum(final List<String> musicType) async {
   List<Album> albums = [];
   // Loop on the musicStyles list
+  print(musicType.length);
   for (var i = 0; i < musicType.length; i++) {
     final encodedMusicType = Uri.encodeComponent(musicType[i]);
     final json = await http.get(Uri.parse(
@@ -49,22 +50,18 @@ class _MyHomePageState extends State<MyHomePage> {
   final History history = History.instance;
 
   void playerPause() {
-    setState(() {
       if (isPaused) {
         audioPlayer.resumeAudio();
       } else {
         audioPlayer.pauseAudio();
       }
       isPaused = !isPaused;
-    });
   }
 
   void playerPlay(String url) {
-    setState(() {
       UrlSource source = UrlSource(url);
       audioPlayer.playAudio(source);
       isPaused = false;
-    });
   }
 
   // Get playlist of favorites musics from database
@@ -75,34 +72,34 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-        automaticallyImplyLeading: false,
-        centerTitle: true,
+Widget build(BuildContext context) {
+  return Scaffold(
+    resizeToAvoidBottomInset: false,
+    appBar: AppBar(
+      backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+      title: Text(
+        widget.title,
       ),
-      body: Center(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.all(30.0),
-            // List of musicStyles from database
-            child: FutureBuilder<List<String>>(
-              future: musicStyles,
-              builder: (context, snapshot) {
-                if (snapshot.hasData) {
-                  List<String> styles = snapshot.data!;
-                  // List of albums
-                  return FutureBuilder<List<Album>>(
-                    future: getAllAlbum(styles),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: snapshot.data!
-                              .map((album) => GestureDetector(
+      automaticallyImplyLeading: false,
+      centerTitle: true,
+    ),
+    body: Center(
+      child: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: FutureBuilder<List<String>>(
+            future: musicStyles,
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                List<String> styles = snapshot.data!;
+                return FutureBuilder<List<Album>>(
+                  future: getAllAlbum(styles),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: snapshot.data!
+                            .map((album) => InkWell(
                                   onTap: () {
                                     url = album.audio!;
                                     playerPlay(album.audio!);
@@ -116,55 +113,93 @@ class _MyHomePageState extends State<MyHomePage> {
                                     }
                                   },
                                   child: Container(
-                                      padding: const EdgeInsets.all(10),
-                                      child: Row(
-                                        children: [
-                                          Expanded(
+                                    margin: const EdgeInsets.only(bottom: 8.0),
+                                    child: Ink(
+                                      decoration: BoxDecoration(
+                                        color: Colors.grey[200],
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                      child: Container(
+                                        padding: const EdgeInsets.all(10),
+                                        child: Row(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius: BorderRadius.circular(8.0),
                                               child: Image.network(
-                                                  album.albumImage!)),
-                                          const Padding(
-                                              padding: EdgeInsets.all(10)),
-                                          Expanded(
-                                              child: Column(children: [
-                                            Text(album.albumName!),
-                                            Text(album.artistName!)
-                                          ])),
-                                           Expanded(
-                                                 child: IconButton(
-                                                icon:
-                                                    const Icon(Icons.download),
-                                                tooltip: 'download',
-                                                onPressed: () {
-                                                  downloadMusic(album.audiodownload!, album.name!);
-                                                }),
-                                          )
-                                        ],
-                                      ))))
-                              .toList(),
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('Error: ${snapshot.error}');
-                      }
-                      return const CircularProgressIndicator();
-                    },
-                  );
-                } else if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-                return const CircularProgressIndicator();
-              },
-            ),
+                                                album.albumImage!,
+                                                height: 80,
+                                                width: 80,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 16.0),
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    capitalizeFirst(album.name!),
+                                                    style: const TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 18.0,
+                                                    ),
+                                                  ),
+                                                  Text(
+                                                    capitalizeFirst(album.artistName!),
+                                                    style: const TextStyle(
+                                                      fontSize: 14.0,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                            IconButton(
+                                              icon: const Icon(Icons.download),
+                                              tooltip: 'Télécharger',
+                                              onPressed: () {
+                                                downloadMusic(album.audiodownload!, album.name!);
+                                                _showToast(context, 'Musique téléchargée');
+                                              },
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ))
+                            .toList(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Erreur: ${snapshot.error}');
+                    }
+                    return const CircularProgressIndicator();
+                  },
+                );
+              } else if (snapshot.hasError) {
+                return Text('Erreur: ${snapshot.error}');
+              }
+              return const CircularProgressIndicator();
+            },
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: playerPause,
-        tooltip: 'Pause',
-        child:
-            isPaused ? const Icon(Icons.play_arrow) : const Icon(Icons.pause),
-      ),
-    );
-  }
+    ),
+    floatingActionButton: StatefulBuilder(
+      builder: (BuildContext context, StateSetter setState) {
+        return FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              playerPause();
+            });
+          },
+          tooltip: isPaused ? 'Play' : 'Pause',
+          child: isPaused ? const Icon(Icons.play_arrow) : const Icon(Icons.pause),
+        );
+      },
+    ),
+  );
+}
+
 
   Future<List<String>> getStyles() async {
     // widget.id
@@ -233,3 +268,22 @@ Future<void> downloadMusic(String fileUrl, String fileName) async {
     print('Erreur lors du téléchargement : $e');
   }
 }
+
+ void _showToast(BuildContext context, String message) {
+    final scaffold = ScaffoldMessenger.of(context);
+    scaffold.showSnackBar(
+      SnackBar(
+        content: Text(message),
+        action: SnackBarAction(label: '', onPressed: scaffold.hideCurrentSnackBar),
+      ),
+    );
+  }
+
+  String capitalizeFirst(String text) {
+  if (text.isEmpty) {
+    return text;
+  }
+  return text[0].toUpperCase() + text.substring(1).toLowerCase();
+}
+
+  

@@ -69,9 +69,10 @@ class _HistoryPage extends State<HistoryPage> {
           var album = history.getData()[index];
           return GestureDetector(
             onTap: () {
+              MyAudioPlayer audio = MyAudioPlayer.instance;
+              audio.pauseAudio(); // Stop l'audio précédent
               url = album.audio!;
               playerPlay(album.audio!);
-              history.addToData(album);
             },
             child: Container(
               padding: const EdgeInsets.all(10),

@@ -161,7 +161,7 @@ Widget build(BuildContext context) {
             ),
             child: const Text(
               'Valider',
-              style: TextStyle(fontSize: 18),
+              style: TextStyle(fontSize: 15),
             ),
           ),
         ),

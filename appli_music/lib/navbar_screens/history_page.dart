@@ -83,8 +83,19 @@ class _HistoryPage extends State<HistoryPage> {
                   Expanded(
                     child: Column(
                       children: [
-                        Text(album.albumName!),
-                        Text(album.artistName!),
+                         Text(
+                          capitalizeFirst(album.name!),
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18.0,
+                          ),
+                        ),
+                        Text(
+                          capitalizeFirst(album.artistName!),
+                          style: const TextStyle(
+                            fontSize: 14.0,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -111,4 +122,11 @@ class _HistoryPage extends State<HistoryPage> {
       ),
     );
   }
+}
+
+  String capitalizeFirst(String text) {
+  if (text.isEmpty) {
+    return text;
+  }
+  return text[0].toUpperCase() + text.substring(1).toLowerCase();
 }
